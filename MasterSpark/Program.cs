@@ -6,10 +6,11 @@ namespace MasterSpark
 {
     class Program
     {
+        private static Game game;
         static void Main(string[] args)
         {
-            var game = new Game(new Vector2(1280, 720), 60);
-
+            game = new Game(new Vector2(1280, 720), 60);
+            
             while (!Raylib.WindowShouldClose())
             {
                 game.Update();

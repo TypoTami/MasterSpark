@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using MasterSpark.Utils;
+using MasterSpark.Engine;
 using Raylib_cs;
 
 namespace MasterSpark
@@ -9,7 +9,7 @@ namespace MasterSpark
         private Vector2 _windowSize;
         private int _targetFPS;
 
-        private Scene _currentScene;
+        public SceneController Scene;
         
         public Game(Vector2 windowSize, int targetFPS)
         {
@@ -26,13 +26,19 @@ namespace MasterSpark
 
             Raylib.SetTargetFPS(_targetFPS);
 
-            _currentScene = new TestScene();
+            Scene = new SceneController();
+            Scene.AddScene(new Scenes.TestScene());
+            Scene.AddScene(new Scenes.MainMenu());
+            
+            Scene.LoadScene("MainMenu");
         }
 
         public void Update()
         {
             _windowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
-            Raylib.SetWindowTitle($"MasterSpark - {_windowSize} - {Raylib.GetFPS()}FPS/{Raylib.GetFrameTime()}ms");
+            Raylib.SetWindowTitle($"MasterSpark - {Scene.Current().Name} - {_windowSize} - {Raylib.GetFPS()}FPS/{Raylib.GetFrameTime()}ms");
+            
+            Scene.Current().Update();
         }
 
         public void Draw()
@@ -41,7 +47,7 @@ namespace MasterSpark
             {
                 Raylib.ClearBackground(Color.LIGHTGRAY);
                 
-                _currentScene.Draw();
+                Scene.Current().Draw();
             }
             Raylib.EndDrawing();
         }
